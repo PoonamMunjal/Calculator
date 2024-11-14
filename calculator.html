@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style type="text/css">
+		body{
+			padding:0;
+			margin:0;
+			background: #ccc;
+
+		}
+		table{
+			width:450px;
+			height:450px;
+			margin:auto;
+			margin-top:30px;
+			background:#808000;
+			border-collapse: collapse;
+			border-style: hidden;
+			
+			border-radius: 20px !important;
+			box-shadow: 0px 3px 5px rgba(0,0,0,.5),inset 1px 4px 5px rgba(255,255,255,.7), inset -1px -4px 5px rgba(0,0,0,.2);
+
+		}
+		table tr{
+			text-align: center;
+		}
+		table tr td{
+			padding: 10px;
+			text-align: center;
+		}
+		table tr td button{
+			font-size: 26px;
+			height:55px;
+			width:55px;
+			cursor: pointer;
+    		transform: translateY(-6px);
+    		font-family: Arial;
+  			display: inline-block;
+			  border-top: 3px solid #8CD5B5;
+			  border-left: 3px solid #8CD5B5;
+			  border-bottom: 3px solid #034126;
+			  border-right: 3px solid #034126;
+			  border-radius: 50%;
+			  padding: 10px;
+			  color: #1e4735;
+			  text-shadow: -1px -1px 0px #000;
+			  background: radial-gradient(at 30% 15%,#24D387,#085F39);
+			  box-shadow: 0px 3px 5px rgba(0,0,0,.5),inset 1px 4px 5px rgba(255,255,255,.7), inset -1px -4px 5px rgba(0,0,0,.2);
+			  position: relative;
+		}
+		
+		table tr td button:active  {
+		    transform: translateY(-2px);
+		  }
+		table tr td input{
+			width:380px;
+			height:40px;
+			text-align: right;
+			padding-right: 15px;
+			font-family: Arial;
+			font-size: 26px;
+			border-radius: 20px;
+			border: none;
+
+			box-shadow: 0px 3px 5px rgba(0,0,0,.5),inset 1px 4px 5px rgba(255,255,255,.7), inset -1px -4px 5px rgba(0,0,0,.2);
+		}
+		input:focus{
+    outline: none;
+}
+	</style>
+</head>
+<body>
+	<table border cellspacing="0">
+		<tr>
+			
+			<td colspan=5><input type="text"/></td>
+		</tr>
+		<tr>
+			<td><button>+</button></td>
+			<td><button>1</button></td>
+			<td><button>2</button></td>
+			<td><button>3</button></td>
+			<td rowspan=2><button>C</button></td>
+		</tr>
+		<tr>
+			<td><button>-</button></td>
+			<td><button>4</button></td>
+			<td><button>5</button></td>
+			<td><button>6</button></td>
+		</tr>
+		<tr>
+			<td><button>×</button></td>
+			<td><button>7</button></td>
+			<td><button>8</button></td>
+			<td><button>9</button></td>
+			<td rowspan="2"><button>B</button></td>
+		</tr>
+		<tr>
+			<td><button>0</button></td>
+			<td><button>.</button></td>
+			<td><button>÷</button></td>
+			<td><button>=</button></td>
+			
+		</tr>
+	</table>
+</body>
+<script type="text/javascript">
+	let table=document.querySelector("table");
+	let input=document.querySelector("input");
+	table.addEventListener("click",(event)=>{
+		let targetPoint=event.target;
+		if(targetPoint.tagName=="BUTTON"){
+			let oldValue=input.value;
+			let lastchar=input.value[input.value.length-1];
+			let sliceData=input.value.slice(0,input.value.length-1);
+			var opr=["+","-","×","÷","."];
+				if(targetPoint.innerHTML=="C"){
+					input.value="";
+				}
+				else if(targetPoint.innerHTML=="B"){
+					input.value=sliceData;
+				}
+				else if(targetPoint.innerHTML=="="){
+
+					var finalData="";
+					for(i of input.value){
+						if(i=="÷"){
+							i="/";
+						}
+						else if(i=="×"){
+							i="*";
+						}
+						else{
+							i=i;
+						}
+						finalData=finalData+i;
+						//console.log(finalData);
+						}
+				
+					input.value=eval(finalData);
+				}
+				else if(targetPoint.innerHTML=="."){
+
+						var plus=input.value.lastIndexOf("+");
+						var minus=input.value.lastIndexOf("-");
+						var mul=input.value.lastIndexOf("×");
+						var div=input.value.lastIndexOf("÷");
+						var indexValue;
+						if(plus>minus && plus>mul && plus>div){
+							indexValue=plus
+						}
+						else if(minus>plus && minus>mul && minus>div){
+							indexValue=minus
+						}
+						else if(mul>plus && mul>minus && mul>div){
+							indexValue=mul
+						}
+						else if(div>plus && div>minus && div>mul){
+							indexValue=div
+						}
+						else{
+							indexValue=0
+						}
+						var lastoprIndex=indexValue;
+						var lastOpr=(input.value.charAt(indexValue));
+						var str=input.value.slice(0,input.value.length)
+						var lastStr=input.value.slice(indexValue+1)
+						console.log(lastStr)
+						console.log(str)
+						var flag=0;
+						for(var i=0;i<lastStr.length;i++){
+							if(lastStr.charAt(i)=="."){
+								flag=1;
+								break;
+							}
+							
+						}
+						if(flag==1 && targetPoint.innerHTML=="."){
+							input.value=str;
+						}
+						else{
+							input.value=str+targetPoint.innerHTML;
+						}
+						
+				}
+
+				else{
+					if(opr.includes(targetPoint.innerHTML) && opr.includes(lastchar)){
+						input.value=sliceData+targetPoint.innerHTML;
+					}
+					else if(input.value.length==0){
+						if(targetPoint.innerHTML=="×" || targetPoint.innerHTML=="÷"){
+							input.value='';
+						}
+						else{
+							input.value=targetPoint.innerHTML;
+						}
+					}
+					else{
+						input.value=oldValue+targetPoint.innerHTML;
+					}
+					
+					
+				}
+			}
+	})
+	
+</script>
+</html>
